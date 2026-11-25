@@ -1,0 +1,22 @@
+#!/bin/bash
+# Стартовая страница шаблонной ВМ (раздел user-data в metadata, выполняется cloud-init при первом запуске).
+# Apache из образа LAMP уже слушает :80 и отдаёт каталог /var/www/html.
+# Имя ВМ подставляется на самой машине (`hostname`): шаблон у всех ВМ группы один и тот же,
+# а в ответе должно быть видно, КАКАЯ именно ВМ ответила, — иначе балансировку не показать.
+HOST=$(hostname)
+cat > /var/www/html/index.html <<EOF
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <title>Netology — LAMP за балансировщиком</title>
+</head>
+<body style="font-family: sans-serif; text-align: center;">
+  <h1>Netology — LAMP за балансировщиком</h1>
+  <h2>Отвечает ВМ: $HOST</h2>
+  <p>Картинка лежит в бакете Object Storage и открывается по прямой ссылке:</p>
+  <p><a href="${picture_url}">${picture_url}</a></p>
+  <img src="${picture_url}" alt="Картинка из бакета" width="800">
+</body>
+</html>
+EOF

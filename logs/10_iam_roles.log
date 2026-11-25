@@ -1,0 +1,23 @@
+$ yc resource-manager folder list-access-bindings b1gabvo7h0vqf8vkt52s
++----------------------+----------------+----------------------+
+|       ROLE ID        |  SUBJECT TYPE  |      SUBJECT ID      |
++----------------------+----------------+----------------------+
+| storage.editor       | serviceAccount | aje1cu5hen94s1mesor0 |
+| compute.editor       | serviceAccount | ajed5hn19uov5k03objd |
+| vpc.publicAdmin      | serviceAccount | ajed5hn19uov5k03objd |
+| vpc.user             | serviceAccount | ajed5hn19uov5k03objd |
+| alb.editor           | serviceAccount | ajed5hn19uov5k03objd |
+| editor               | serviceAccount | ajerd2n99sk27rd8e3s1 |
+| load-balancer.editor | serviceAccount | ajed5hn19uov5k03objd |
++----------------------+----------------+----------------------+
+
+
+$ yc iam service-account list
++----------------------+------------+--------+---------------------+-----------------------+
+|          ID          |    NAME    | LABELS |     CREATED AT      | LAST AUTHENTICATED AT |
++----------------------+------------+--------+---------------------+-----------------------+
+| aje1cu5hen94s1mesor0 | storage-sa |        | 2026-11-25 01:07:30 | 2026-11-25 03:00:00   |
+| ajed5hn19uov5k03objd | ig-sa      |        | 2026-11-25 01:07:30 | 2026-11-25 03:00:00   |
+| ajerd2n99sk27rd8e3s1 | terraform  |        | 2026-07-08 07:34:51 | 2026-11-25 03:00:00   |
++----------------------+------------+--------+---------------------+-----------------------+
+

@@ -1,0 +1,345 @@
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  + create
+
+Terraform will perform the following actions:
+
+  # time_sleep.wait_for_iam will be created
+  + resource "time_sleep" "wait_for_iam" {
+      + create_duration = "20s"
+      + id              = (known after apply)
+    }
+
+  # yandex_compute_instance_group.lamp will be created
+  + resource "yandex_compute_instance_group" "lamp" {
+      + created_at          = (known after apply)
+      + deletion_protection = false
+      + description         = "Три ВМ с LAMP; стартовая страница ссылается на картинку из бакета"
+      + folder_id           = "b1gabvo7h0vqf8vkt52s"
+      + id                  = (known after apply)
+      + instances           = (known after apply)
+      + name                = "lamp-group"
+      + service_account_id  = (known after apply)
+      + status              = (known after apply)
+
+      + allocation_policy {
+          + zones = [
+              + "ru-central1-a",
+            ]
+        }
+
+      + deploy_policy {
+          + max_creating     = 0
+          + max_deleting     = 0
+          + max_expansion    = 0
+          + max_unavailable  = 1
+          + startup_duration = 0
+          + strategy         = (known after apply)
+        }
+
+      + health_check {
+          + healthy_threshold   = 2
+          + interval            = 5
+          + timeout             = 2
+          + unhealthy_threshold = 3
+
+          + http_options {
+              + path = "/"
+              + port = 80
+            }
+        }
+
+      + instance_template {
+          + description = "ВМ LAMP из группы lamp-group"
+          + hostname    = "lamp-{instance.index}"
+          + labels      = (known after apply)
+          + metadata    = (known after apply)
+          + name        = "lamp-{instance.index}"
+          + platform_id = "standard-v3"
+
+          + boot_disk {
+              + device_name = (known after apply)
+              + mode        = "READ_WRITE"
+
+              + initialize_params {
+                  + image_id    = "fd827b91d99psvq5fjit"
+                  + size        = 5
+                  + snapshot_id = (known after apply)
+                  + type        = "network-hdd"
+                }
+            }
+
+          + metadata_options (known after apply)
+
+          + network_interface {
+              + ip_address         = (known after apply)
+              + ipv4               = true
+              + ipv6               = (known after apply)
+              + ipv6_address       = (known after apply)
+              + nat                = true
+              + network_id         = (known after apply)
+              + security_group_ids = (known after apply)
+              + subnet_ids         = (known after apply)
+            }
+
+          + resources {
+              + core_fraction = 20
+              + cores         = 2
+              + memory        = 2
+            }
+
+          + scheduling_policy (known after apply)
+        }
+
+      + load_balancer {
+          + status_message           = (known after apply)
+          + target_group_description = "Target group для сетевого балансировщика, ведётся группой lamp-group"
+          + target_group_id          = (known after apply)
+          + target_group_name        = "lamp-nlb-tg"
+        }
+
+      + scale_policy {
+          + fixed_scale {
+              + size = 3
+            }
+        }
+    }
+
+  # yandex_iam_service_account.ig will be created
+  + resource "yandex_iam_service_account" "ig" {
+      + created_at         = (known after apply)
+      + description        = "Instance Group lamp-group: управление ВМ и target group балансировщика"
+      + expires_at         = (known after apply)
+      + folder_id          = (known after apply)
+      + id                 = (known after apply)
+      + labels             = (known after apply)
+      + name               = "ig-sa"
+      + service_account_id = (known after apply)
+      + status             = (known after apply)
+    }
+
+  # yandex_iam_service_account.storage will be created
+  + resource "yandex_iam_service_account" "storage" {
+      + created_at         = (known after apply)
+      + description        = "Загрузка картинки в бакет Object Storage"
+      + expires_at         = (known after apply)
+      + folder_id          = (known after apply)
+      + id                 = (known after apply)
+      + labels             = (known after apply)
+      + name               = "storage-sa"
+      + service_account_id = (known after apply)
+      + status             = (known after apply)
+    }
+
+  # yandex_iam_service_account_static_access_key.storage will be created
+  + resource "yandex_iam_service_account_static_access_key" "storage" {
+      + access_key                   = (known after apply)
+      + created_at                   = (known after apply)
+      + description                  = "Статический ключ storage-sa для загрузки объектов в бакет"
+      + encrypted_secret_key         = (known after apply)
+      + id                           = (known after apply)
+      + key_fingerprint              = (known after apply)
+      + output_to_lockbox_version_id = (known after apply)
+      + secret_key                   = (sensitive value)
+      + service_account_id           = (known after apply)
+    }
+
+  # yandex_lb_network_load_balancer.web will be created
+  + resource "yandex_lb_network_load_balancer" "web" {
+      + allow_zonal_shift   = (known after apply)
+      + created_at          = (known after apply)
+      + deletion_protection = (known after apply)
+      + description         = "Внешний сетевой балансировщик перед группой lamp-group"
+      + folder_id           = (known after apply)
+      + id                  = (known after apply)
+      + name                = "lamp-nlb"
+      + region_id           = (known after apply)
+      + type                = "external"
+
+      + attached_target_group {
+          + target_group_id = (known after apply)
+
+          + healthcheck {
+              + healthy_threshold   = 2
+              + interval            = 2
+              + name                = "http"
+              + timeout             = 1
+              + unhealthy_threshold = 2
+
+              + http_options {
+                  + path = "/"
+                  + port = 80
+                }
+            }
+        }
+
+      + listener {
+          + name        = "http"
+          + port        = 80
+          + protocol    = "tcp"
+          + target_port = 80
+
+          + external_address_spec {
+              + address    = (known after apply)
+              + ip_version = "ipv4"
+            }
+        }
+    }
+
+  # yandex_resourcemanager_folder_iam_member.ig["compute.editor"] will be created
+  + resource "yandex_resourcemanager_folder_iam_member" "ig" {
+      + folder_id = "b1gabvo7h0vqf8vkt52s"
+      + id        = (known after apply)
+      + member    = (known after apply)
+      + role      = "compute.editor"
+    }
+
+  # yandex_resourcemanager_folder_iam_member.ig["load-balancer.editor"] will be created
+  + resource "yandex_resourcemanager_folder_iam_member" "ig" {
+      + folder_id = "b1gabvo7h0vqf8vkt52s"
+      + id        = (known after apply)
+      + member    = (known after apply)
+      + role      = "load-balancer.editor"
+    }
+
+  # yandex_resourcemanager_folder_iam_member.ig["vpc.user"] will be created
+  + resource "yandex_resourcemanager_folder_iam_member" "ig" {
+      + folder_id = "b1gabvo7h0vqf8vkt52s"
+      + id        = (known after apply)
+      + member    = (known after apply)
+      + role      = "vpc.user"
+    }
+
+  # yandex_resourcemanager_folder_iam_member.storage will be created
+  + resource "yandex_resourcemanager_folder_iam_member" "storage" {
+      + folder_id = "b1gabvo7h0vqf8vkt52s"
+      + id        = (known after apply)
+      + member    = (known after apply)
+      + role      = "storage.editor"
+    }
+
+  # yandex_storage_bucket.this will be created
+  + resource "yandex_storage_bucket" "this" {
+      + acl                   = (known after apply)
+      + bucket                = "vpakspace-20261125"
+      + bucket_domain_name    = (known after apply)
+      + default_storage_class = (known after apply)
+      + folder_id             = (known after apply)
+      + force_destroy         = true
+      + id                    = (known after apply)
+      + policy                = (known after apply)
+      + website_domain        = (known after apply)
+      + website_endpoint      = (known after apply)
+
+      + anonymous_access_flags {
+          + list = false
+          + read = true
+        }
+
+      + grant (known after apply)
+
+      + versioning (known after apply)
+    }
+
+  # yandex_storage_object.picture will be created
+  + resource "yandex_storage_object" "picture" {
+      + access_key   = (known after apply)
+      + acl          = "private"
+      + bucket       = "vpakspace-20261125"
+      + content_type = "image/png"
+      + id           = (known after apply)
+      + key          = "picture.png"
+      + secret_key   = (sensitive value)
+      + source       = "./files/picture.png"
+    }
+
+  # yandex_vpc_network.this will be created
+  + resource "yandex_vpc_network" "this" {
+      + created_at                = (known after apply)
+      + default_security_group_id = (known after apply)
+      + description               = "VPC для ДЗ «Вычислительные мощности. Балансировщики нагрузки»"
+      + folder_id                 = (known after apply)
+      + id                        = (known after apply)
+      + labels                    = (known after apply)
+      + name                      = "netology-vpc"
+      + subnet_ids                = (known after apply)
+    }
+
+  # yandex_vpc_security_group.web will be created
+  + resource "yandex_vpc_security_group" "web" {
+      + created_at  = (known after apply)
+      + description = "ВМ группы lamp-group: входящий HTTP, исходящий — любой"
+      + folder_id   = (known after apply)
+      + id          = (known after apply)
+      + labels      = (known after apply)
+      + name        = "lamp-web-sg"
+      + network_id  = (known after apply)
+      + status      = (known after apply)
+
+      + egress {
+          + description       = "Любой исходящий трафик"
+          + from_port         = -1
+          + id                = (known after apply)
+          + labels            = (known after apply)
+          + port              = -1
+          + protocol          = "ANY"
+          + to_port           = -1
+          + v4_cidr_blocks    = [
+              + "0.0.0.0/0",
+            ]
+          + v6_cidr_blocks    = []
+            # (2 unchanged attributes hidden)
+        }
+
+      + ingress {
+          + description       = "HTTP от клиентов и проверок состояния NLB/ALB"
+          + from_port         = -1
+          + id                = (known after apply)
+          + labels            = (known after apply)
+          + port              = 80
+          + protocol          = "TCP"
+          + to_port           = -1
+          + v4_cidr_blocks    = [
+              + "0.0.0.0/0",
+            ]
+          + v6_cidr_blocks    = []
+            # (2 unchanged attributes hidden)
+        }
+    }
+
+  # yandex_vpc_subnet.public will be created
+  + resource "yandex_vpc_subnet" "public" {
+      + created_at     = (known after apply)
+      + description    = "Публичная подсеть: ВМ группы lamp-group с публичными IP"
+      + folder_id      = (known after apply)
+      + id             = (known after apply)
+      + labels         = (known after apply)
+      + name           = "public"
+      + network_id     = (known after apply)
+      + v4_cidr_blocks = [
+          + "192.168.10.0/24",
+        ]
+      + v6_cidr_blocks = (known after apply)
+      + zone           = "ru-central1-a"
+    }
+
+Plan: 15 to add, 0 to change, 0 to destroy.
+
+Changes to Outputs:
+  + instance_group = {
+      + id                = (known after apply)
+      + target_group_id   = (known after apply)
+      + target_group_name = "lamp-nlb-tg"
+    }
+  + nlb_address    = (known after apply)
+  + picture_url    = (known after apply)
+  + vms            = (known after apply)
+
+─────────────────────────────────────────────────────────────────────────────
+
+Saved the plan to:
+/tmp/claude-1000/-home-vladspace/f94eab4f-c477-45fb-933f-64e58de79956/scratchpad/lb/tfplan
+
+To perform exactly these actions, run the following command to apply:
+    terraform apply "/tmp/claude-1000/-home-vladspace/f94eab4f-c477-45fb-933f-64e58de79956/scratchpad/lb/tfplan"

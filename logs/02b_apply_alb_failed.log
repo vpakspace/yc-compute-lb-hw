@@ -1,0 +1,52 @@
+yandex_alb_http_router.web: Creating...
+yandex_compute_instance_group.lamp: Destroying... [id=cl15fmmnc20l0dn7l70g]
+yandex_alb_http_router.web: Creation complete after 5s [id=ds75k3ujmvj41mkkjhre]
+yandex_alb_load_balancer.web: Creating...
+yandex_compute_instance_group.lamp: Still destroying... [id=cl15fmmnc20l0dn7l70g, 00m10s elapsed]
+yandex_alb_load_balancer.web: Still creating... [00m10s elapsed]
+yandex_compute_instance_group.lamp: Still destroying... [id=cl15fmmnc20l0dn7l70g, 00m20s elapsed]
+yandex_alb_load_balancer.web: Still creating... [00m20s elapsed]
+yandex_compute_instance_group.lamp: Still destroying... [id=cl15fmmnc20l0dn7l70g, 00m30s elapsed]
+yandex_compute_instance_group.lamp: Still destroying... [id=cl15fmmnc20l0dn7l70g, 00m55s elapsed]
+yandex_alb_load_balancer.web: Still creating... [00m50s elapsed]
+yandex_alb_load_balancer.web: Still creating... [01m00s elapsed]
+yandex_compute_instance_group.lamp: Still destroying... [id=cl15fmmnc20l0dn7l70g, 01m05s elapsed]
+yandex_alb_load_balancer.web: Still creating... [01m10s elapsed]
+yandex_compute_instance_group.lamp: Still destroying... [id=cl15fmmnc20l0dn7l70g, 01m15s elapsed]
+yandex_compute_instance_group.lamp: Destruction complete after 1m21s
+yandex_compute_instance_group.lamp: Creating...
+yandex_alb_load_balancer.web: Still creating... [01m20s elapsed]
+yandex_alb_load_balancer.web: Still creating... [01m30s elapsed]
+yandex_alb_load_balancer.web: Still creating... [01m40s elapsed]
+yandex_alb_load_balancer.web: Still creating... [01m50s elapsed]
+yandex_alb_load_balancer.web: Still creating... [02m00s elapsed]
+yandex_alb_load_balancer.web: Still creating... [02m10s elapsed]
+yandex_alb_load_balancer.web: Still creating... [02m20s elapsed]
+yandex_alb_load_balancer.web: Still creating... [02m30s elapsed]
+yandex_alb_load_balancer.web: Still creating... [02m40s elapsed]
+yandex_alb_load_balancer.web: Still creating... [02m54s elapsed]
+yandex_alb_load_balancer.web: Still creating... [03m04s elapsed]
+yandex_alb_load_balancer.web: Still creating... [03m14s elapsed]
+yandex_alb_load_balancer.web: Still creating... [03m44s elapsed]
+yandex_alb_load_balancer.web: Still creating... [04m50s elapsed]
+yandex_alb_load_balancer.web: Still creating... [05m00s elapsed]
+yandex_alb_load_balancer.web: Still creating... [05m10s elapsed]
+yandex_alb_load_balancer.web: Still creating... [05m20s elapsed]
+yandex_alb_load_balancer.web: Still creating... [05m30s elapsed]
+yandex_alb_load_balancer.web: Still creating... [05m40s elapsed]
+yandex_alb_load_balancer.web: Still creating... [05m50s elapsed]
+yandex_alb_load_balancer.web: Still creating... [06m00s elapsed]
+yandex_alb_load_balancer.web: Still creating... [06m10s elapsed]
+yandex_alb_load_balancer.web: Still creating... [08m14s elapsed]
+yandex_alb_load_balancer.web: Creation complete after 8m16s [id=ds799fulk45u2i66d528]
+╷
+│ Error: Error while requesting API to create instance group: x-request-id = d579bb84-8d92-4a90-a1b7-f6f2579ab582 x-server-trace-id = 3b4b9c80de73b0fb:cc83d92a418d0130:a2186cc058e9c415:1 x-client-trace-id = 8808f783-bf96-4372-aa08-f7f0ad0c40b5 rpc error: code = InvalidArgument desc = Validation failed:
+│   - load_balancer_spec: Only one of (load_balancer_spec, application_load_balancer_spec) can be specified
+│   - application_load_balancer_spec: Only one of (load_balancer_spec, application_load_balancer_spec) can be specified
+│ 
+│   with yandex_compute_instance_group.lamp,
+│   on instance_group.tf line 2, in resource "yandex_compute_instance_group" "lamp":
+│    2: resource "yandex_compute_instance_group" "lamp" {
+│ 
+╵
+apply rc=1

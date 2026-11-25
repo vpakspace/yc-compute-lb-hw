@@ -1,0 +1,45 @@
+vladspace@vladspace-VirtualBox:~/yc-compute-lb-hw/terraform$ yc load-balancer network-load-balancer get --name lamp-nlb
+id: enp0pit395ffrgk5vr8f
+folder_id: b1gabvo7h0vqf8vkt52s
+created_at: "2026-11-25T01:46:51Z"
+name: lamp-nlb
+description: Внешний сетевой балансировщик перед группой lamp-group
+region_id: ru-central1
+status: ACTIVE
+type: EXTERNAL
+listeners:
+  - name: http
+    address: 51.250.3.233
+    port: "80"
+    protocol: TCP
+    target_port: "80"
+    ip_version: IPV4
+attached_target_groups:
+  - target_group_id: enplcb2cp4a3rthig3ij
+    health_checks:
+      - name: http
+        interval: 2s
+        timeout: 1s
+        unhealthy_threshold: "2"
+        healthy_threshold: "2"
+        http_options:
+          port: "80"
+          path: /
+
+
+vladspace@vladspace-VirtualBox:~/yc-compute-lb-hw/terraform$ yc load-balancer network-load-balancer target-states lamp-nlb --target-group-id enplcb2cp4a3rthig3ij
++----------------------+---------------+---------+
+|      SUBNET ID       |    ADDRESS    | STATUS  |
++----------------------+---------------+---------+
+| e9b3b7u0eqjqovcu377g | 192.168.10.20 | HEALTHY |
+| e9b3b7u0eqjqovcu377g | 192.168.10.36 | HEALTHY |
+| e9b3b7u0eqjqovcu377g | 192.168.10.4  | HEALTHY |
++----------------------+---------------+---------+
+
+
+# 30 запросов на 51.250.3.233 — сколько раз ответила каждая ВМ:
+vladspace@vladspace-VirtualBox:~/yc-compute-lb-hw/terraform$ for i in $(seq 30); do curl -s --max-time 3 http://51.250.3.233/ | grep -o 'lamp-[0-9]*'; done | sort | uniq -c
+      8 lamp-1
+     10 lamp-2
+     12 lamp-3
+

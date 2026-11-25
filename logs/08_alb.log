@@ -1,0 +1,59 @@
+vladspace@vladspace-VirtualBox:~/yc-compute-lb-hw/terraform$ yc application-load-balancer load-balancer get --name lamp-alb
+id: ds799fulk45u2i66d528
+name: lamp-alb
+description: Внешний Application Load Balancer перед группой lamp-group
+folder_id: b1gabvo7h0vqf8vkt52s
+status: ACTIVE
+network_id: enpqgnj6mv62r8ghj1vo
+listeners:
+  - name: http
+    endpoints:
+      - addresses:
+          - external_ipv4_address:
+              address: 84.201.159.151
+        ports:
+          - "80"
+    http:
+      handler:
+        http_router_id: ds75k3ujmvj41mkkjhre
+allocation_policy:
+  locations:
+    - zone_id: ru-central1-a
+      subnet_id: e9b3b7u0eqjqovcu377g
+created_at: "2026-11-25T02:09:54.761442902Z"
+
+
+vladspace@vladspace-VirtualBox:~/yc-compute-lb-hw/terraform$ yc application-load-balancer backend-group get --name lamp-backend-group
+id: ds7b6u897mn81jupdpd5
+name: lamp-backend-group
+description: 'Backend group для lamp-group: HTTP :80 с проверкой GET /'
+folder_id: b1gabvo7h0vqf8vkt52s
+http:
+  backends:
+    - name: lamp-backend
+      backend_weight: "1"
+      port: "80"
+      target_groups:
+        target_group_ids:
+          - ds79ng84raisa2ic5mbj
+      healthchecks:
+        - timeout: 1s
+          interval: 2s
+          healthy_threshold: "2"
+          unhealthy_threshold: "2"
+          http:
+            path: /
+created_at: "2026-11-25T02:42:12.427351671Z"
+
+
+vladspace@vladspace-VirtualBox:~/yc-compute-lb-hw/terraform$ yc application-load-balancer load-balancer target-states lamp-alb --target-group-name lamp-alb-tg --backend-group-name lamp-backend-group --format json | jq -r '.[] | "\(.target.ip_address)  \(.status.zone_statuses[0].status)"'
+192.168.10.19  HEALTHY
+192.168.10.14  HEALTHY
+192.168.10.29  HEALTHY
+
+# 30 запросов на 84.201.159.151 — сколько раз ответила каждая ВМ:
+vladspace@vladspace-VirtualBox:~/yc-compute-lb-hw/terraform$ for i in $(seq 30); do curl -s --max-time 3 http://84.201.159.151/ | grep -o 'lamp-[0-9]*'; done | sort | uniq -c
+      8 lamp-1
+     11 lamp-2
+     11 lamp-3
+

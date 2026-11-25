@@ -1,0 +1,59 @@
+vladspace@vladspace-VirtualBox:~/yc-compute-lb-hw/terraform$ yc compute instance-group list-instances --name lamp-group
++----------------------+--------+---------------+---------------+------------------------+----------------+
+|     INSTANCE ID      |  NAME  |  EXTERNAL IP  |  INTERNAL IP  |         STATUS         | STATUS MESSAGE |
++----------------------+--------+---------------+---------------+------------------------+----------------+
+| fhmnnhhjj81t7as7q1g2 | lamp-1 | 84.201.135.19 | 192.168.10.4  | RUNNING_ACTUAL [1m13s] |                |
+| fhm8qe22r9d26ngbf081 | lamp-2 | 62.84.126.128 | 192.168.10.36 | RUNNING_ACTUAL [1m38s] |                |
+| fhmm6l7ipja0u29fjfd9 | lamp-3 | 51.250.89.225 | 192.168.10.20 | RUNNING_ACTUAL [1m1s]  |                |
++----------------------+--------+---------------+---------------+------------------------+----------------+
+
+
+vladspace@vladspace-VirtualBox:~/yc-compute-lb-hw/terraform$ yc compute instance list
++----------------------+--------+---------------+---------+---------------+---------------+
+|          ID          |  NAME  |    ZONE ID    | STATUS  |  EXTERNAL IP  |  INTERNAL IP  |
++----------------------+--------+---------------+---------+---------------+---------------+
+| fhm8qe22r9d26ngbf081 | lamp-2 | ru-central1-a | RUNNING | 62.84.126.128 | 192.168.10.36 |
+| fhmm6l7ipja0u29fjfd9 | lamp-3 | ru-central1-a | RUNNING | 51.250.89.225 | 192.168.10.20 |
+| fhmnnhhjj81t7as7q1g2 | lamp-1 | ru-central1-a | RUNNING | 84.201.135.19 | 192.168.10.4  |
++----------------------+--------+---------------+---------+---------------+---------------+
+
+
+vladspace@vladspace-VirtualBox:~/yc-compute-lb-hw/terraform$ curl -s --max-time 5 http://84.201.135.19/ | grep -E 'Отвечает|href=' || echo '(нет ответа за 5 с)'
+(нет ответа за 5 с)
+
+vladspace@vladspace-VirtualBox:~/yc-compute-lb-hw/terraform$ curl -s --max-time 5 http://62.84.126.128/ | grep -E 'Отвечает|href=' || echo '(нет ответа за 5 с)'
+  <h2>Отвечает ВМ: lamp-2</h2>
+  <p><a href="https://vpakspace-20261125.storage.yandexcloud.net/picture.png">https://vpakspace-20261125.storage.yandexcloud.net/picture.png</a></p>
+
+vladspace@vladspace-VirtualBox:~/yc-compute-lb-hw/terraform$ curl -s --max-time 5 http://51.250.89.225/ | grep -E 'Отвечает|href=' || echo '(нет ответа за 5 с)'
+(нет ответа за 5 с)
+
+vladspace@vladspace-VirtualBox:~/yc-compute-lb-hw/terraform$ yc compute instance-group get --name lamp-group --format json | jq '{name, status, scale_policy, health_checks_spec, load_balancer_state, application_load_balancer_state}'
+{
+  "name": "lamp-group",
+  "status": "ACTIVE",
+  "scale_policy": {
+    "fixed_scale": {
+      "size": "3"
+    }
+  },
+  "health_checks_spec": {
+    "health_check_specs": [
+      {
+        "interval": "5s",
+        "timeout": "2s",
+        "unhealthy_threshold": "3",
+        "healthy_threshold": "2",
+        "http_options": {
+          "port": "80",
+          "path": "/"
+        }
+      }
+    ]
+  },
+  "load_balancer_state": {
+    "target_group_id": "enplcb2cp4a3rthig3ij"
+  },
+  "application_load_balancer_state": {}
+}
+

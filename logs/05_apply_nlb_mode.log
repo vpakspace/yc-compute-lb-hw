@@ -1,0 +1,58 @@
+yandex_alb_virtual_host.web[0]: Destroying... [id=ds75k3ujmvj41mkkjhre/lamp-vhost]
+yandex_alb_virtual_host.web[0]: Destruction complete after 5s
+yandex_alb_backend_group.web[0]: Destroying... [id=ds7b6u897mn81jupdpd5]
+yandex_alb_backend_group.web[0]: Destruction complete after 1s
+yandex_compute_instance_group.lamp: Destroying... [id=cl10avt1ksnujg800elk]
+yandex_compute_instance_group.lamp: Still destroying... [id=cl10avt1ksnujg800elk, 01m08s elapsed]
+yandex_compute_instance_group.lamp: Destruction complete after 1m8s
+yandex_storage_object.picture: Modifying... [id=picture.png]
+yandex_storage_object.picture: Modifications complete after 2s [id=picture.png]
+yandex_compute_instance_group.lamp: Creating...
+yandex_compute_instance_group.lamp: Still creating... [00m10s elapsed]
+yandex_compute_instance_group.lamp: Still creating... [00m20s elapsed]
+yandex_compute_instance_group.lamp: Still creating... [00m41s elapsed]
+yandex_compute_instance_group.lamp: Still creating... [00m51s elapsed]
+yandex_compute_instance_group.lamp: Still creating... [01m01s elapsed]
+yandex_compute_instance_group.lamp: Still creating... [01m11s elapsed]
+yandex_compute_instance_group.lamp: Still creating... [01m21s elapsed]
+yandex_compute_instance_group.lamp: Still creating... [01m31s elapsed]
+yandex_compute_instance_group.lamp: Still creating... [01m41s elapsed]
+yandex_compute_instance_group.lamp: Still creating... [01m51s elapsed]
+yandex_compute_instance_group.lamp: Creation complete after 1m57s [id=cl1knh1u5pa0r58ot699]
+yandex_lb_network_load_balancer.web: Modifying... [id=enp0pit395ffrgk5vr8f]
+yandex_lb_network_load_balancer.web: Modifications complete after 3s [id=enp0pit395ffrgk5vr8f]
+
+Apply complete! Resources: 1 added, 2 changed, 3 destroyed.
+
+Outputs:
+
+alb_address = "84.201.159.151"
+instance_group = {
+  "alb_target_group_id" = null
+  "id" = "cl1knh1u5pa0r58ot699"
+  "target_group_id" = "enplcb2cp4a3rthig3ij"
+  "target_group_name" = "lamp-nlb-tg"
+}
+nlb_address = "51.250.3.233"
+picture_url = "https://vpakspace-20261125.storage.yandexcloud.net/picture.png"
+vms = [
+  {
+    "internal_ip" = "192.168.10.4"
+    "name" = "lamp-1"
+    "public_ip" = "84.201.135.19"
+    "status" = "RUNNING_ACTUAL"
+  },
+  {
+    "internal_ip" = "192.168.10.36"
+    "name" = "lamp-2"
+    "public_ip" = "62.84.126.128"
+    "status" = "RUNNING_ACTUAL"
+  },
+  {
+    "internal_ip" = "192.168.10.20"
+    "name" = "lamp-3"
+    "public_ip" = "51.250.89.225"
+    "status" = "RUNNING_ACTUAL"
+  },
+]
+apply rc=0

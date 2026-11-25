@@ -1,0 +1,52 @@
+yandex_compute_instance_group.lamp: Creating...
+yandex_compute_instance_group.lamp: Still creating... [00m10s elapsed]
+yandex_compute_instance_group.lamp: Still creating... [00m20s elapsed]
+yandex_compute_instance_group.lamp: Still creating... [00m30s elapsed]
+yandex_compute_instance_group.lamp: Still creating... [00m40s elapsed]
+yandex_compute_instance_group.lamp: Still creating... [00m50s elapsed]
+yandex_compute_instance_group.lamp: Still creating... [01m00s elapsed]
+yandex_compute_instance_group.lamp: Still creating... [01m10s elapsed]
+yandex_compute_instance_group.lamp: Still creating... [01m20s elapsed]
+yandex_compute_instance_group.lamp: Still creating... [01m30s elapsed]
+yandex_compute_instance_group.lamp: Still creating... [01m40s elapsed]
+yandex_compute_instance_group.lamp: Still creating... [01m50s elapsed]
+yandex_compute_instance_group.lamp: Creation complete after 1m52s [id=cl10avt1ksnujg800elk]
+yandex_alb_backend_group.web[0]: Creating...
+yandex_alb_backend_group.web[0]: Creation complete after 2s [id=ds7b6u897mn81jupdpd5]
+yandex_alb_virtual_host.web[0]: Creating...
+yandex_alb_virtual_host.web[0]: Creation complete after 1s [id=ds75k3ujmvj41mkkjhre/lamp-vhost]
+
+Apply complete! Resources: 3 added, 0 changed, 0 destroyed.
+
+Outputs:
+
+alb_address = "84.201.159.151"
+instance_group = {
+  "alb_target_group_id" = "ds79ng84raisa2ic5mbj"
+  "id" = "cl10avt1ksnujg800elk"
+  "target_group_id" = null
+  "target_group_name" = null
+}
+nlb_address = "51.250.3.233"
+picture_url = "https://vpakspace-20261125.storage.yandexcloud.net/picture.png"
+vms = [
+  {
+    "internal_ip" = "192.168.10.19"
+    "name" = "lamp-1"
+    "public_ip" = "51.250.89.225"
+    "status" = "RUNNING_ACTUAL"
+  },
+  {
+    "internal_ip" = "192.168.10.14"
+    "name" = "lamp-2"
+    "public_ip" = "62.84.113.228"
+    "status" = "RUNNING_ACTUAL"
+  },
+  {
+    "internal_ip" = "192.168.10.29"
+    "name" = "lamp-3"
+    "public_ip" = "62.84.126.73"
+    "status" = "RUNNING_ACTUAL"
+  },
+]
+apply rc=0
