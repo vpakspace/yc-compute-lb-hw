@@ -137,7 +137,7 @@ resource "yandex_storage_bucket" "this" {
 ![бакет: объекты](img/console_bucket_objects.png)
 ![бакет: настройки доступа](img/console_bucket_settings.png)
 
-Адрес картинки: `https://vpakspace-20261125.storage.yandexcloud.net/picture.png` (после очистки стенда ссылка перестаёт открываться).
+Адрес картинки: `https://vpakspace-20261125.storage.yandexcloud.net/picture.png` (стенд убран, ссылка больше не открывается).
 
 ### 2. Группа ВМ с шаблоном LAMP
 
@@ -287,7 +287,7 @@ $ yc compute instance-group list-instances --name lamp-group      (сокращ�
 Помог `source_hash = filemd5(...)` (после этого объект обновился на месте: 41 669 байт, ETag сменился).
 
 **8. Роли в YC раздаются асинхронно**, поэтому между назначением ролей и созданием группы стоит `time_sleep` на 20 с. Назначать роли может только аккаунт с `admin`:
-SA `terraform` получал его на время `apply` и затем терял. Состояние после работы:
+SA `terraform` получал его на время `apply` и затем терял. Состояние перед очисткой (до `destroy`):
 
 ![роли в folder после работы](img/11_iam_roles.png)
 
@@ -312,6 +312,13 @@ export TF_CLI_CONFIG_FILE=$PWD/.terraformrc
 # destroy тоже меняет роли, так что SA terraform снова нужен admin на время команды (см. «Как запустить»)
 terraform destroy
 ```
+
+**Стенд убран 25.11.2026** ([12_destroy.log](logs/12_destroy.log); ID статического ключа в логе заменён на `<ID ключа скрыт>`): `terraform destroy` удалил все 19 ресурсов,
+после чего я сверил это по самому облаку, а не по выводу Terraform: в folder 0 групп ВМ, ВМ, дисков, балансировщиков (NLB и ALB), target group, роутеров, backend group,
+сетей, подсетей, групп безопасности, внешних адресов и бакетов; из сервисных аккаунтов остался только `terraform`, и роли в folder вернулись к исходным (у него снова только `editor`).
+Имя бакета снова свободно, поэтому ссылка на картинку и адреса балансировщиков из README больше не открываются.
+
+![terraform destroy](img/12_destroy.png)
 
 ## Структура репозитория
 
